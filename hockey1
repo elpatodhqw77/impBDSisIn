@@ -44,11 +44,6 @@ mysql> DESC  GameScores;
 +------------+------+------+-----+---------+-------+
 3 rows in set (0.00 sec)
 
-mysql> DESC hockeyGame
-    -> 
-    -> 
-    -> DESC HockeyGame;
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DESC HockeyGame' at line 4
 mysql> DESC HockeyGame;
 +-------------+--------------+------+-----+---------+-------+
 | Field       | Type         | Null | Key | Default | Extra |
@@ -63,35 +58,6 @@ mysql> DESC HockeyGame;
 +-------------+--------------+------+-----+---------+-------+
 7 rows in set (0.01 sec)
 
-mysql> INSERT into(id,roundId,startTime,endTime,description,team1Id,team2Id)
-    -> values ('5','2','2025/09/02','2025/09/02','kim-santiago','9','4');
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(id,roundId,startTime,endTime,description,team1Id,team2Id)
-values ('5','2','2025' at line 1
-mysql> INSERT into(id,roundId,startTime,endTime,description,team1Id,team2Id)
-    -> values ('10','6','2025/09/02','2025/09/02','kim-santiago','9','4');
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(id,roundId,startTime,endTime,description,team1Id,team2Id)
-values ('10','6','202' at line 1
-mysql> INSERT into(id,roundId,startTime,endTime,description,team1Id,team2Id)
-    -> values ('10','6','25/09/02','25/09/02','kim-santiago','9','4');
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(id,roundId,startTime,endTime,description,team1Id,team2Id)
-values ('10','6','25/' at line 1
-mysql> INSERT INTO(id,roundId,startTime,endTime,description,team1Id,team2Id)
-    -> values ('10','6','2025/09/02','2025/09/02','kim-santiago','9','4');
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(id,roundId,startTime,endTime,description,team1Id,team2Id)
-values ('10','6','202' at line 1
-mysql> INSERT INTO(id,roundId,startTime,endTime,description,team1Id,team2Id)
-values ('10','6','2025/09/02','2025/09/02','CELESTE_77','9','4');INSERT INTO(id,roundId,startTime,endTime,description,team1Id,team2Id)
-^C
-mysql> values ('10','6','2025/09/02','2025/09/02','CELESTE_77','9','4');
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '('10','6','2025/09/02','2025/09/02','CELESTE_77','9','4')' at line 1
-mysql> INSERT INTO(id,roundId,startTime,endTime,description,team1Id,team2Id)
-    -> values ('10','6','2025/09/02','2025/09/02','CELESTE_77','9','4');
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(id,roundId,startTime,endTime,description,team1Id,team2Id)
-values ('10','6','202' at line 1
-mysql> INSERT INTO(id,roundId,startTime,endTime,description,team1Id,team2Id)
-    -> values ('10','6','2025/09/02','2025/09/02','CELESTE_77','9','4');
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(id,roundId,startTime,endTime,description,team1Id,team2Id)
-values ('10','6','202' at line 1
 mysql> INSERT INTO HockeyGame(id,roundId,startTime,endTime,description,team1Id,team2Id)
     -> values ('10','6','2025/09/02','2025/09/02','CELESTE_77','9','4');
 Query OK, 1 row affected, 2 warnings (0.01 sec)
@@ -112,7 +78,7 @@ Query OK, 1 row affected (0.00 sec)
 
 mysql> DESC  HockeyTeamPlayer;        
  HockeyTeamPlayer;
-^C
+
 mysql> DESC HockeyTeam;
 +-------+--------------+------+-----+---------+-------+
 | Field | Type         | Null | Key | Default | Extra |
@@ -176,7 +142,7 @@ mysql> DESC User;
 
 mysql> INSERT INTO User(id,username,password)
        values ('7','34','23');INSERT INTO User(id,username,password)
-^C
+
 mysql> NSERT INTO User(id,username,password)
     ->        values ('7','34','23');
 ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NSERT INTO User(id,username,password)
@@ -202,9 +168,6 @@ mysql> DESC UserInfo;
 
 mysql> INSERT into UserInfo(id,firstName,lastName,email,round1Points,round2Points,round3Points,round4Points)
     ->        values ('3','1','17','12','20','3','2','6')
-    -> 
-    -> 
-    -> ^C^C^C^C^C^C^C^C^C^C
 
 ^C
 mysql> INSERT into UserInfo(id,firstName,lastName,email,round1Points,round2Points,round3Points,round4Points)
@@ -250,7 +213,7 @@ Query OK, 1 row affected (0.00 sec)
 
 mysql> DESC detalle_horario;
 detalle_horario;
-^C
+
 mysql> DESC detalle_horario;
 +--------------------+-------------+------+-----+---------+-------+
 | Field              | Type        | Null | Key | Default | Extra |
@@ -281,77 +244,36 @@ mysql> DESC playoffround;
 
 mysql> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     ->        values ('67','11,'18','2025/07/02','2025/07/02','33');
-    '> ^C^C^C^C^C^C
 
-^C
 mysql> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     ->        values ('67','11,'18','2025/07/02','2025/07/02','33');
-    '> 
-    '> ^C^C^C^C^C^C^C^C
 
-^C
 mysql> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     ->        values ('67','11,'18','2025/07/02','2025/07/02','33');
-    '> 
-    '> ^C^C^C^C^C
 
-^C
 mysql> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     ->        values ('67','11,'18','2025/07/02','2025/07/02','33');
-    '> ^C^C^C^C^C^Ccc
-cc
-^C
+
 mysql> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     ->        values ('67','11,'18','2025/07/02','2025/07/02','33');
-    '> ^C 
 
-^C
 mysql> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     ->        values ('67','11,'18','2025/07/02','2025/07/02','33');
-    '> ^C^C^C^C^C
-
-^C
+  
 mysql> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     ->        values ('67','11,'18','2025/07/02','2025/07/02','33');
-    '> 
-    '> 
-    '> 
-    '> 
-    '> 
-    '> ^C^C^C
 
-^C
 mysql> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     ->        values ('67','11,'18','2025/08/16','2025/07/16','45');
-    '> ^C^C^C
 
-^C
 mysql> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     ->        values ('67','11,'18','2025/08/16','2025/07/16','45');
-    '> 
-    '> ^C^C^C^C
 
-^C
 mysql> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     ->        values ('78','11,'18','2025/08/16','2025/07/16','45');
     '> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     '>        values ('78','11,'18','2025/09/07','2025/09/07',32');
-    '> ^C^C^C^C
-    '> 
-    '> 
-    '> 
-    '> 
-    '> 
-    '> 
-    '> ^C^C^C^C^C^C^C
-^C
-mysql> 
-mysql> 
-mysql> 
-mysql> 
-mysql> 
-mysql> ^C^C^C^C^C^C
-^C
+
 mysql> DESC usuarios;
 +--------------+--------------+------+-----+---------+-------+
 | Field        | Type         | Null | Key | Default | Extra |
@@ -367,9 +289,7 @@ mysql> INSERT INTO usuarios(idx,nombre,apellidos,departamento)
 Query OK, 1 row affected (0.01 sec)
 mysql> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     ->        values ('78','11,'18','2025/08/16','2025/07/16','45');
-    '> 
-    '> ^C^C^C^C^C^C^C
-^C
+
 mysql> INSERT INTO playoffround(id,team1id,team2id,StartTime,endTime,roundNum)
     ->        values ('78','11','18','2025/08/16','2025/07/16','45');
 Query OK, 1 row affected, 2 warnings (0.01 sec)
