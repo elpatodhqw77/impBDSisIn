@@ -1,0 +1,186 @@
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| owouu31$default    |
+| owouu31$holA       |
+| performance_schema |
++--------------------+
+4 rows in set (0.51 sec)
+
+mysql> create table books (
+    ->     id int not null,
+    ->     name varchar(50) not null,
+    ->     price int not null,
+    ->     categoryid int not null,
+    ->     authorid int not null,
+    ->     primary key(id, name)
+    ->  );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into
+    ->     -> categories
+    ->     -> values
+    ->     -> (1, 'Cat-A'),
+    ->     -> (2, 'Cat-B'),
+    ->     -> (3, 'Cat-C'),
+    ->     -> (7, 'Cat-D'),
+    ->     -> (8, 'Cat-E'),
+    ->     -> (4, 'Cat-F'),
+    ->     -> (10, 'Cat-G'),
+    ->     -> (12, 'Cat-H'),
+    ->     -> (6, 'Cat-I');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> categories
+    -> values
+    -> (1, 'Cat-A'),
+    -> (2, 'Cat-B'),
+    -> (3,' at line 2
+mysql> insert into
+    ->      categories
+    ->      values
+    ->      (1, 'Cat-A'),
+    ->      (2, 'Cat-B'),
+    ->      (3, 'Cat-C'),
+    ->      (7, 'Cat-D'),
+    ->      (8, 'Cat-E'),
+    ->      (4, 'Cat-F'),
+    ->      (10, 'Cat-G'),
+    ->      (12, 'Cat-H'),
+    ->      (6, 'Cat-I');
+Query OK, 9 rows affected (0.01 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+
+mysql>  insert into
+    ->      authors
+    ->      values
+    ->      (1, 'author-a'),
+    ->      (2, 'author-b'),
+    ->      (3, 'author-c'),
+    ->      (10, 'author-d'),
+    ->      (12, 'author-e');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>  insert into
+    ->      books
+    ->      values
+    ->      (1,'Book-A', 100, 1, 2),
+    ->      (2,'Book-B', 200, 2, 2),
+    ->      (3,'Book-C', 150, 3, 2),
+    ->      (4,'Book-D', 100, 3, 1),
+    ->      (5,'Book-E', 200, 3, 1),
+    ->      (6,'Book-F', 150, 4, 1),
+    ->      (7,'Book-G', 100, 5, 5),
+    ->      (8,'Book-H', 200, 5, 6),
+    ->      (9,'Book-I', 150, 7, 8);
+ERROR 4031 (HY000): The client was disconnected by the server because of inactivity. See wait_timeout and interactive_timeout for configuring this behavior.
+No connection. Trying to reconnect...
+Connection id:    15740871
+Current database: owouu31$default
+
+Query OK, 9 rows affected (0.55 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+
+mysql> select * from books inner join authors on books.authorid = authors.id;
++----+--------+-------+------------+----------+----+----------+
+| id | name   | price | categoryid | authorid | Id | name     |
++----+--------+-------+------------+----------+----+----------+
+|  1 | Book-A |   100 |          1 |        2 |  2 | author-b |
+|  2 | Book-B |   200 |          2 |        2 |  2 | author-b |
+|  3 | Book-C |   150 |          3 |        2 |  2 | author-b |
+|  4 | Book-D |   100 |          3 |        1 |  1 | author-a |
+|  5 | Book-E |   200 |          3 |        1 |  1 | author-a |
+|  6 | Book-F |   150 |          4 |        1 |  1 | author-a |
++----+--------+-------+------------+----------+----+----------+
+6 rows in set (0.00 sec)
+
+mysql> select * from books left outer join categories on books.categoryid = categories.id;
++----+--------+-------+------------+----------+------+-------+
+| id | name   | price | categoryid | authorid | Id   | name  |
++----+--------+-------+------------+----------+------+-------+
+|  1 | Book-A |   100 |          1 |        2 |    1 | Cat-A |
+|  2 | Book-B |   200 |          2 |        2 |    2 | Cat-B |
+|  3 | Book-C |   150 |          3 |        2 |    3 | Cat-C |
+|  4 | Book-D |   100 |          3 |        1 |    3 | Cat-C |
+|  5 | Book-E |   200 |          3 |        1 |    3 | Cat-C |
+|  6 | Book-F |   150 |          4 |        1 |    4 | Cat-F |
+|  7 | Book-G |   100 |          5 |        5 | NULL | NULL  |
+|  8 | Book-H |   200 |          5 |        6 | NULL | NULL  |
+|  9 | Book-I |   150 |          7 |        8 |    7 | Cat-D |
++----+--------+-------+------------+----------+------+-------+
+9 rows in set (0.00 sec)
+
+mysql>  select * from books
+    ->      left join categories on books.categoryid = categories.id;
++----+--------+-------+------------+----------+------+-------+
+| id | name   | price | categoryid | authorid | Id   | name  |
++----+--------+-------+------------+----------+------+-------+
+|  1 | Book-A |   100 |          1 |        2 |    1 | Cat-A |
+|  2 | Book-B |   200 |          2 |        2 |    2 | Cat-B |
+|  3 | Book-C |   150 |          3 |        2 |    3 | Cat-C |
+|  4 | Book-D |   100 |          3 |        1 |    3 | Cat-C |
+|  5 | Book-E |   200 |          3 |        1 |    3 | Cat-C |
+|  6 | Book-F |   150 |          4 |        1 |    4 | Cat-F |
+|  7 | Book-G |   100 |          5 |        5 | NULL | NULL  |
+|  8 | Book-H |   200 |          5 |        6 | NULL | NULL  |
+|  9 | Book-I |   150 |          7 |        8 |    7 | Cat-D |
++----+--------+-------+------------+----------+------+-------+
+9 rows in set (0.01 sec)
+
+mysql> select * from books
+    ->      right join categories on books.categoryid = categories.id;
++------+--------+-------+------------+----------+----+-------+
+| id   | name   | price | categoryid | authorid | Id | name  |
++------+--------+-------+------------+----------+----+-------+
+|    1 | Book-A |   100 |          1 |        2 |  1 | Cat-A |
+|    2 | Book-B |   200 |          2 |        2 |  2 | Cat-B |
+|    5 | Book-E |   200 |          3 |        1 |  3 | Cat-C |
+|    4 | Book-D |   100 |          3 |        1 |  3 | Cat-C |
+|    3 | Book-C |   150 |          3 |        2 |  3 | Cat-C |
+|    6 | Book-F |   150 |          4 |        1 |  4 | Cat-F |
+| NULL | NULL   |  NULL |       NULL |     NULL |  6 | Cat-I |
+|    9 | Book-I |   150 |          7 |        8 |  7 | Cat-D |
+| NULL | NULL   |  NULL |       NULL |     NULL |  8 | Cat-E |
+| NULL | NULL   |  NULL |       NULL |     NULL | 10 | Cat-G |
+| NULL | NULL   |  NULL |       NULL |     NULL | 12 | Cat-H |
++------+--------+-------+------------+----------+----+-------+
+11 rows in set (0.00 sec)
+
+mysql> select * from books right outer join categories on books.categoryid = categories.id;
++------+--------+-------+------------+----------+----+-------+
+| id   | name   | price | categoryid | authorid | Id | name  |
++------+--------+-------+------------+----------+----+-------+
+|    1 | Book-A |   100 |          1 |        2 |  1 | Cat-A |
+|    2 | Book-B |   200 |          2 |        2 |  2 | Cat-B |
+|    5 | Book-E |   200 |          3 |        1 |  3 | Cat-C |
+|    4 | Book-D |   100 |          3 |        1 |  3 | Cat-C |
+|    3 | Book-C |   150 |          3 |        2 |  3 | Cat-C |
+|    6 | Book-F |   150 |          4 |        1 |  4 | Cat-F |
+| NULL | NULL   |  NULL |       NULL |     NULL |  6 | Cat-I |
+|    9 | Book-I |   150 |          7 |        8 |  7 | Cat-D |
+| NULL | NULL   |  NULL |       NULL |     NULL |  8 | Cat-E |
+| NULL | NULL   |  NULL |       NULL |     NULL | 10 | Cat-G |
+| NULL | NULL   |  NULL |       NULL |     NULL | 12 | Cat-H |
++------+--------+-------+------------+----------+----+-------+
+11 rows in set (0.00 sec)
+
+mysql> select * from books
+    ->      left join authors
+    ->      on books.authorid = authors.id
+    ->      where authors.id is null;
++----+--------+-------+------------+----------+------+------+
+| id | name   | price | categoryid | authorid | Id   | name |
++----+--------+-------+------------+----------+------+------+
+|  7 | Book-G |   100 |          5 |        5 | NULL | NULL |
+|  8 | Book-H |   200 |          5 |        6 | NULL | NULL |
+|  9 | Book-I |   150 |          7 |        8 | NULL | NULL |
++----+--------+-------+------------+----------+------+------+
+3 rows in set (0.00 sec)
+
+mysql>  select * from books
+    ->      right join authors
+    ->      on books.authorid = authors.id
+    ->      where authors.id is null;
+Empty set (0.10 sec)
