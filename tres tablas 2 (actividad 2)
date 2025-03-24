@@ -1,0 +1,158 @@
+mysql> INSERT INTO Carrito1 ( Articulo1 ) VALUES
+    -> ('Azucar'),
+    ->     ('Pan'),
+    ->     ('jugo'),
+    ->     ('Refresco'),
+    ->     ('Harina');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Carrito2 ( Articulo2 ) VALUES
+    -> ('Azucar'),
+    ->     ('Pan'),
+    ->     ('Mantequilla'),
+    ->     ('Queso'),
+    ->     ('Manzana');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+mysql> SELECT * From Carrito1 left outer join Carrito2 on Carrito1.Art1culo1 = Carrito2.Articulo2
+    -> union 
+    -> SELECT * From Carrito1 right outer join Carrito2 on Carrrito2.Articulo2 = Carrito2.Articulo1;
+ERROR 1054 (42S22): Unknown column 'Carrito1.Art1culo1' in 'on clause'
+mysql> SELECT * From Carrito1 left outer join Carrito2 on Carrito1.Articulo1 = Carrito2.Articulo2
+    -> union 
+    -> SELECT * From Carrito1 right outer join Carrito2 on Carrrito2.Articulo2 = Carrito2.Articulo1;
+ERROR 1054 (42S22): Unknown column 'Carrrito2.Articulo2' in 'on clause'
+mysql> SELECT * From Carrito1 left outer join Carrito2 on Carrito1.Articulo1 = Carrito2.Articulo2
+    -> union 
+    -> SELECT * From Carrito1 right outer join Carrito2 on Carrito2.Articulo2 = Carrito1.Articulo1;
++-----------+-------------+
+| Articulo1 | Articulo2   |
++-----------+-------------+
+| Azucar    | Azucar      |
+| Pan       | Pan         |
+| jugo      | NULL        |
+| Refresco  | NULL        |
+| Harina    | NULL        |
+| NULL      | Mantequilla |
+| NULL      | Queso       |
+| NULL      | Manzana     |
++-----------+-------------+
+8 rows in set (0.00 sec)
+
+
+SEGUNDA TABLA
+
+mysql> CREATE TABLE Empresa (
+    -> ID_Empleado INT,
+    -> ID_Gerente INT,
+    -> Puesto VARCHAR (100)
+    -> ); 
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO Empresa (ID_Empleado,ID_Gerente,Puesto) 
+    -> VALUES 
+    -> (1001, NULL ,'Presidente'),
+    -> (2002, 1001 ,'Director'),
+    -> (3003, 1001 ,'gerente'),
+    -> (4004, 2002 ,'Ingeniero'),
+    -> (5005, 2002 ,'Contador'),
+    -> (6006, 2002 ,'Administrador');
+Query OK, 6 rows affected (0.01 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> WITH RECURSIVE Organigrama AS (
+    -> SELECT 
+    ->    ID_Empleado,ID_Gerente,Puesto, 0 AS Nivel
+    -> FROM Empresa 
+    -> WHERE ID_Gerente IS NULL
+    -> UNION ALL
+    -> SELECT e.ID_Empleado,e.ID_Gerente,Puesto,o.Nivel + 1 AS Nivel
+    -> FROM Empresa e
+    -> INNER JOIN
+    ->   Organigrama o
+    -> ON e.ID_Gerente = o.ID_Empleado)
+    -> SELECT
+    ->   ID_Empleado,ID_Gerente,Puesto,Nivel
+    -> FROM Organigrama
+    -> ORDER BY Nivel, ID_Empleado;
+ERROR 1052 (23000): Column 'Puesto' in field list is ambiguous
+mysql> WITH RECURSIVE Organigrama AS (
+    -> SELECT 
+    ->    ID_Empleado,ID_Gerente,Puesto, 0 AS Nivel
+    -> FROM Empresa 
+    -> WHERE ID_Gerente IS NULL
+    -> UNION ALL
+    -> SELECT e.ID_Empleado,e.ID_Gerente,Puesto,o.Nivel + 1 AS Nivel
+    -> FROM Empresa e
+    -> INNER JOIN
+    ->   Organigrama o
+    -> ON e.ID_Gerente = o.ID_Empleado)
+    -> SELECT
+    ->   ID_Empleado,ID_Gerente,Puesto,Nivel
+    -> FROM Organigrama
+    -> ORDER BY Nivel, ID_Empleado;
+ERROR 1052 (23000): Column 'Puesto' in field list is ambiguous
+mysql> WITH RECURSIVE Organigrama AS (
+    -> SELECT 
+    ->    ID_Empleado,ID_Gerente,Puesto, 0 AS Nivel
+    -> FROM Empresa 
+    -> WHERE ID_Gerente IS NULL
+    -> UNION ALL
+    -> SELECT e.ID_Empleado,e.ID_Gerente,e.Puesto,o.Nivel + 1 AS Nivel
+    -> FROM Empresa e
+    -> INNER JOIN
+    ->   Organigrama o
+    -> ON e.ID_Gerente = o.ID_Empleado)
+    -> SELECT
+    ->   ID_Empleado,ID_Gerente,Puesto,Nivel
+    -> FROM Organigrama
+    -> ORDER BY Nivel, ID_Empleado;
++-------------+------------+---------------+-------+
+| ID_Empleado | ID_Gerente | Puesto        | Nivel |
++-------------+------------+---------------+-------+
+|        1001 |       NULL | Presidente    |     0 |
+|        2002 |       1001 | Director      |     1 |
+|        3003 |       1001 | gerente       |     1 |
+|        4004 |       2002 | Ingeniero     |     2 |
+|        5005 |       2002 | Contador      |     2 |
+|        6006 |       2002 | Administrador |     2 |
++-------------+------------+---------------+-------+
+6 rows in set (0.00 sec)
+
+TERCERA Tabla
+
+ysql> CREATE TABLE Predicados (
+    ->     ID_Cliente INT,
+    ->     ID_Orden INT,
+    ->     Estado_Destino VARCHAR (100),
+    ->     Costo VARCHAR(100) 
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+mysql> INSERT INTO Predicados (ID_Cliente,ID_Orden,Estado_Destino,Costo) 
+    -> VALUES 
+    -> (1001, 1, 'JAL', '$987'),
+    -> (1001, 2, 'CDMX', '$400'),
+    -> (1001, 3, 'CDMX', '$545'),
+    -> (1001, 4, 'CDMX', '$321'),
+    -> (2002, 5, 'MTY', '$324'),
+    -> (3003, 6, 'JAL', '$931'),
+    -> (4004, 7, 'JAL', '$876'),
+    -> (5005, 8, 'CDMX', '$567');
+Query OK, 8 rows affected (0.00 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+mysql> SELECT ID_Cliente,ID_Orden,Estado_Destino,Costo
+    -> FROM Predicados
+    -> WHERE Estado_Destino = 'CDMX'
+    -> AND ID_Cliente IN (
+    ->     SELECT ID_Cliente FROM Predicados WHERE Estado_Destino = 'JAL'
+    -> );
++------------+----------+----------------+-------+
+| ID_Cliente | ID_Orden | Estado_Destino | Costo |
++------------+----------+----------------+-------+
+|       1001 |        2 | CDMX           | $400  |
+|       1001 |        3 | CDMX           | $545  |
+|       1001 |        4 | CDMX           | $321  |
++------------+----------+----------------+-------+
+3 rows in set (0.00 sec)
