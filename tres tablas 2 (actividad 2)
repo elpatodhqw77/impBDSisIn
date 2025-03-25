@@ -156,3 +156,4 @@ mysql> SELECT ID_Cliente,ID_Orden,Estado_Destino,Costo
 |       1001 |        4 | CDMX           | $321  |
 +------------+----------+----------------+-------+
 3 rows in set (0.00 sec)
+
