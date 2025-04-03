@@ -126,32 +126,43 @@ mysql> SELECT a.ID_empleado AS ID_empleado_1, b.ID_empleado AS ID_empleado_2, CO
 +---------------+---------------+---------------+
 4 rows in set (0.00 sec)
 -------------------------------------------------------------------------------------------------------------
-mysql> CREATE TABLE Ejercicio3 (
+mysql> CREATE TABLE Numeros (
     ->     Entero INT
     -> );
-Query OK, 0 rows affected (0.03 sec)
+Query OK, 0 rows affected (0.08 sec)
 
-mysql> INSERT INTO Ejercicio3 (Entero)
+mysql> INSERT INTO Numeros (Entero)
     -> VALUES 
     -> (5), (6), (10), (10), (13), (14), (17), (20), (81), (90), (76);
 Query OK, 11 rows affected (0.00 sec)
 Records: 11  Duplicates: 0  Warnings: 0
 
+mysql> 
 mysql> SELECT AVG(Entero) AS Media
-    -> FROM Ejercicio3;
+    -> FROM Numeros;
 +---------+
 | Media   |
 +---------+
 | 31.0909 |
 +---------+
 1 row in set (0.00 sec)
+
+mysql> SELECT AVG(Entero) AS Media
+    -> FROM Numeros;
++---------+
+| Media   |
++---------+
+| 31.0909 |
++---------+
+1 row in set (0.00 sec)
+
 mysql> 
 mysql> WITH Ordenados AS (
     ->     SELECT Entero, ROW_NUMBER() OVER (ORDER BY Entero) AS Posicion
-    ->     FROM Ejercicio3
+    ->     FROM Numeros
     -> ),
     -> Conteo AS (
-    ->     SELECT COUNT(*) AS Total FROM Ejercicio3
+    ->     SELECT COUNT(*) AS Total FROM Numeros
     -> )
     -> SELECT 
     ->     AVG(Entero) AS Mediana
@@ -164,10 +175,9 @@ mysql> WITH Ordenados AS (
 +---------+
 | 14.0000 |
 +---------+
-1 row in set (0.00 sec)
-mysql> 
+1 row in set (0.11 sec)
 mysql> SELECT Entero AS Moda, COUNT(Entero) AS Frecuencia
-    -> FROM Ejercicio3
+    -> FROM Numeros
     -> GROUP BY Entero
     -> ORDER BY Frecuencia DESC
     -> LIMIT 1;
@@ -177,3 +187,13 @@ mysql> SELECT Entero AS Moda, COUNT(Entero) AS Frecuencia
 |   10 |          2 |
 +------+------------+
 1 row in set (0.00 sec)
+mysql> 
+mysql> SELECT 
+    ->     MAX(Entero) - MIN(Entero) AS Rango
+    -> FROM Numeros;
++-------+
+| Rango |
++-------+
+|    85 |
++-------+
+1 row in set (0.01 sec)
