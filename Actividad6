@@ -63,4 +63,74 @@ SELECT Producto, 1 AS Cantidad
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+mysql> CREATE TABLE asientos(
+    ->     num_asiento INTEGER
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO asientos VALUES (7), (13), (14), (15), (27), (28), (29), (30), (31), (32), (33), (34), (35), (52), (53), (54);
+Query OK, 16 rows affected (0.02 sec)
+Records: 16  Duplicates: 0  Warnings: 0
+
+mysql> WITH ordered_asientos AS (
+    ->     SELECT num_asiento,
+    ->            LAG(num_asiento) OVER (ORDER BY num_asiento) AS prev_asiento
+    ->     FROM asientos
+    -> ),
+    -> gaps AS (
+    ->     SELECT num_asiento,
+    ->            prev_asiento,
+    ->            num_asiento - prev_asiento - 1 AS gap
+    ->     FROM ordered_asientos
+    ->     WHERE prev_asiento IS NOT NULL
+    -> )
+    -> SELECT prev_asiento + 1 AS Espacio_Inicio,
+    ->        num_asiento - 1 AS Espacio_Final
+    -> FROM gaps
+    -> WHERE gap > 0
+    -> UNION ALL
+    -> SELECT 1 AS Espacio_Inicio,
+    ->        (SELECT MIN(num_asiento) FROM asientos) - 1 AS Espacio_Final
+    -> WHERE (SELECT MIN(num_asiento) FROM asientos) > 1
+    -> UNION ALL
+    -> SELECT (SELECT MAX(num_asiento) FROM asientos) + 1 AS Espacio_Inicio,
+    ->        54 AS Espacio_Final
+    -> WHERE (SELECT MAX(num_asiento) FROM asientos) < 54
+    -> ORDER BY Espacio_Inicio;
++----------------+---------------+
+| Espacio_Inicio | Espacio_Final |
++----------------+---------------+
+|              1 |             6 |
+|              8 |            12 |
+|             16 |            26 |
+|             36 |            51 |
++----------------+---------------+
+4 rows in set (0.00 sec)
+mysql> SELECT 54 - COUNT(*) AS Total_Disponibles
+    -> FROM asientos;
++-------------------+
+| Total_Disponibles |
++-------------------+
+|                38 |
++-------------------+
+1 row in set (0.00 sec)
+mysql> SELECT
+    ->     CASE
+    ->         WHEN num_asiento % 2 = 0 THEN 'Pares'
+    ->         ELSE 'Impares'
+    ->     END AS Tipo,
+    ->     COUNT(*) AS Total
+    -> FROM asientos
+    -> GROUP BY CASE
+    ->     WHEN num_asiento % 2 = 0 THEN 'Pares'
+    ->     ELSE 'Impares'
+    -> END
+    -> ORDER BY Tipo;
++---------+-------+
+| Tipo    | Total |
++---------+-------+
+| Impares |     7 |
+| Pares   |     9 |
++---------+-------+
+2 rows in set (0.00 sec)
 
