@@ -1,0 +1,66 @@
+mysql> CREATE TABLE Desagrupacion (
+    ->     Producto VARCHAR(50),
+    ->     Cantidad INT
+    -> );
+Query OK, 0 rows affected (0.08 sec)
+mysql> INSERT INTO Desagrupacion (Producto, Cantidad) 
+    -> VALUES
+    -> ('Lápiz', 3),
+    -> ('Borrador', 4),
+    -> ('Cuaderno', 2);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+SELECT Producto, 1 AS Cantidad
+    -> FROM Desagrupacion
+    -> WHERE Producto = 'Lápiz' AND Cantidad >= 1
+    -> UNION ALL
+    -> SELECT Producto, 1 AS Cantidad
+    -> FROM Desagrupacion
+    -> WHERE Producto = 'Lápiz' AND Cantidad >= 2
+    -> UNION ALL
+    -> SELECT Producto, 1 AS Cantidad
+    -> FROM Desagrupacion
+    -> WHERE Producto = 'Lápiz' AND Cantidad >= 3
+    -> UNION ALL
+    -> SELECT Producto, 1 AS Cantidad
+    -> FROM Desagrupacion
+    -> WHERE Producto = 'Borrador' AND Cantidad >= 1
+    -> UNION ALL
+    -> SELECT Producto, 1 AS Cantidad
+    -> FROM Desagrupacion
+    -> WHERE Producto = 'Borrador' AND Cantidad >= 2
+    -> UNION ALL
+    -> SELECT Producto, 1 AS Cantidad
+    -> FROM Desagrupacion
+    -> WHERE Producto = 'Borrador' AND Cantidad >= 3
+    -> UNION ALL
+    -> SELECT Producto, 1 AS Cantidad
+    -> FROM Desagrupacion
+    -> WHERE Producto = 'Borrador' AND Cantidad >= 4
+    -> UNION ALL
+    -> SELECT Producto, 1 AS Cantidad
+    -> FROM Desagrupacion
+    -> WHERE Producto = 'Cuaderno' AND Cantidad >= 1
+    -> UNION ALL
+    -> SELECT Producto, 1 AS Cantidad
+    -> FROM Desagrupacion
+    -> WHERE Producto = 'Cuaderno' AND Cantidad >= 2;
++----------+----------+
+| Producto | Cantidad |
++----------+----------+
+| Lápiz    |        1 |
+| Lápiz    |        1 |
+| Lápiz    |        1 |
+| Borrador |        1 |
+| Borrador |        1 |
+| Borrador |        1 |
+| Borrador |        1 |
+| Cuaderno |        1 |
+| Cuaderno |        1 |
++----------+----------+
+9 rows in set (0.00 sec)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
