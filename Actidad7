@@ -1,0 +1,109 @@
+mysql> CREATE TABLE Videojuegos(
+    ->     ID_Jugadores INT PRIMARY KEY,
+    ->     Marcador INT
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+mysql> INSERT INTO Videojuegos (ID_jugadores, Marcador)
+    -> VALUES
+    ->  (1001, 2343),
+    ->  (2002, 9432),
+    ->  (3003, 6548),
+    ->  (4004, 1054),
+    ->  (5005, 6832);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+mysql> WITH clasificación AS (
+    ->    SELECT
+    ->         NTILE(2) OVER (ORDER BY marcador DESC) AS categoría,
+    ->         ID_Jugadores,
+    ->         Marcador
+    ->    FROM Videojuegos
+    -> )
+    -> SELECT categoría, ID_jugadores, Marcador
+    -> FROM clasificación
+    -> ORDER BY categoría, Marcador DESC;
++------------+--------------+----------+
+| categoría  | ID_jugadores | Marcador |
++------------+--------------+----------+
+|          1 |         2002 |     9432 |
+|          1 |         5005 |     6832 |
+|          1 |         3003 |     6548 |
+|          2 |         1001 |     2343 |
+|          2 |         4004 |     1054 |
++------------+--------------+----------+
+5 rows in set (0.00 sec)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+mysql> CREATE TABLE Paginacion(
+    ->     ID_Orden INT PRIMARY KEY,
+    ->     ID_Cliente INT,
+    ->     Fecha DATE,
+    ->     Cantidad DECIMAL(10,2),
+    ->     Estado VARCHAR(10)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO Paginacion (ID_Orden, ID_Cliente, Fecha, Cantidad, Estado)
+    -> VALUES
+    ->     (1, 1001, '2025-01-01', 100.00, 'JAL'),
+    ->     (2, 3003, '2025-01-01', 100.00, 'COL'),
+    ->     (3, 1001, '2025-01-03', 100.00, 'JAL'),
+    ->     (4, 2002, '2025-01-02', 150.00, 'JAL'),
+    ->     (5, 1001, '2025-01-02', 100.00, 'JAL'),
+    ->     (6, 4004, '2025-01-05', 50.00, 'COL'),
+    ->     (7, 1001, '2025-01-01', 150.00, 'JAL'),
+    ->     (8, 3003, '2025-01-03', 100.00, 'COL'),
+    ->     (9, 4004, '2025-01-04', 100.00, 'COL'),
+    ->     (10, 1001, '2025-01-01', 75.00, 'JAL'),
+    ->     (11, 2002, '2025-01-02', 75.00, 'JAL'),
+    ->     (12, 3003, '2025-01-02', 100.00, 'COL'),
+    ->     (13, 4004, '2025-01-05', 100.00, 'COL'); 
+Query OK, 13 rows affected (0.00 sec)
+Records: 13  Duplicates: 0  Warnings: 0
+mysql> SELECT ID_Orden, ID_Cliente, Fecha, Cantidad, Estado
+    -> FROM Paginacion
+    -> ORDER BY ID_Orden
+    -> LIMIT 5 OFFSET 4;
++----------+------------+------------+----------+--------+
+| ID_Orden | ID_Cliente | Fecha      | Cantidad | Estado |
++----------+------------+------------+----------+--------+
+|        5 |       1001 | 2025-01-02 |   100.00 | JAL    |
+|        6 |       4004 | 2025-01-05 |    50.00 | COL    |
+|        7 |       1001 | 2025-01-01 |   150.00 | JAL    |
+|        8 |       3003 | 2025-01-03 |   100.00 | COL    |
+|        9 |       4004 | 2025-01-04 |   100.00 | COL    |
++----------+------------+------------+----------+--------+
+5 rows in set (0.00 sec)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+mysql> CREATE TABLE Proveedores(
+    -> ID_Orden INT PRIMARY KEY,
+    -> ID_Cliente INT,
+    -> Cantidad INT,
+    -> Proveedor VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+mysql> INSERT INTO Proveedores(ID_Orden, ID_Cliente, Cantidad, Proveedor)
+    -> VALUES
+    ->   (1, 1001, 12, 'IBM'),
+    ->   (2, 1001, 54, 'IBM'),
+    ->   (3, 1001, 32, 'Amazon'),
+    ->   (4, 2002, 7, 'Amazon'),
+    ->   (5, 2002, 16, 'Amazon'),
+    ->   (6, 2002, 5, 'IBM');
+Query OK, 6 rows affected (0.00 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+mysql> SELECT ID_Cliente Proveedor
+    -> FROM (
+    ->     SELECT ID_Cliente, Proveedor,
+    ->        SUM(Cantidad) AS Total_Pedidos,
+    ->        RANK() OVER (PARTITION BY ID_Cliente ORDER BY SUM(cantidad) DESC) AS Ranking
+    ->     FROM Proveedores
+    ->     GROUP BY ID_Cliente, Proveedor
+    -> ) AS Subconsulta
+    -> WHERE Ranking =1;  
++-----------+
+| Proveedor |
++-----------+
+|      1001 |
+|      2002 |
++-----------+
+2 rows in set (0.00 sec)
