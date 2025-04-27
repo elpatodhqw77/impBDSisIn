@@ -1,0 +1,105 @@
+mysql> CREATE TABLE Precios(
+    ->     ID_producto INT,
+    ->     Fecha DATE,
+    ->     Precio DECIMAL(10,2),
+    ->     PRIMARY KEY (ID_Producto, Fecha)
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+mysql> INSERT INTO Precios (ID_producto, Fecha, Precio)
+    -> VALUES
+    ->  (1001, '2025-01-01', 19.99),
+    ->  (1001, '2025-04-15', 59.99),
+    ->  (1001, '2025-06-08', 79.99),
+    ->  (2002, '2025-04-17', 39.99),
+    ->  (2002, '2025-05-19', 59.99); 
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+mysql> SELECT ID_producto, Fecha, Precio
+    -> FROM Precios p1
+    -> WHERE Fecha = (SELECT MAX(Fecha) FROM Precios p2 WHERE p2.ID_producto = p1.ID_producto);
++-------------+------------+--------+
+| ID_producto | Fecha      | Precio |
++-------------+------------+--------+
+|        1001 | 2025-06-08 |  79.99 |
+|        2002 | 2025-05-19 |  59.99 |
++-------------+------------+--------+
+2 rows in set (0.00 sec)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE TABLE Ventas (
+    ->         Id_orden INT PRIMARY KEY,
+    ->         Id_cliente INT,
+    ->         Fecha DATE,
+    ->         Cantidad DECIMAL(10,2),
+    ->         Estado VARCHAR(50)
+    ->      );
+Query OK, 0 rows affected (0.03 sec)
+mysql> INSERT INTO Ventas (Id_orden, Id_cliente, Fecha, Cantidad, Estado)
+    -> VALUES 
+    -> (1, 1001, '2025-01-01', 100, 'JAL'),
+    -> (2, 1001, '2025-01-01', 150, 'JAL'),
+    -> (3, 1001, '2025-01-01', 75, 'JAL'),
+    -> (4, 1001, '2025-02-01', 100, 'JAL'),
+    -> (5, 1001, '2025-03-01', 100, 'JAL'),
+    -> (6, 2002, '2025-02-01', 75, 'JAL'),
+    -> (7, 2002, '2025-02-01', 150, 'JAL'),
+    -> (8, 3003, '2025-01-01', 100, 'CDMX'),
+    -> (9, 3003, '2025-02-01', 100, 'CDMX'),
+    -> (10, 3003, '2025-03-01', 100, 'CDMX'),
+    -> (11, 4004, '2025-04-01', 100, 'CDMX'),
+    -> (12, 4004, '2025-05-01', 50, 'CDMX'),
+    -> (13, 4004, '2025-05-01', 100, 'CDMX');
+Query OK, 13 rows affected (0.03 sec)
+
+Records: 13  Duplicates: 0  Warnings: 0
+mysql> SELECT DISTINCT v.Estado
+    ->      FROM (
+    ->          SELECT Estado, Id_cliente, DATE_FORMAT(Fecha, '%Y-%m') AS mes,
+    ->                AVG(Cantidad) AS promedio_mensual
+    ->          FROM Ventas
+    ->          GROUP BY Estado, Id_cliente, mes
+    ->          HAVING AVG(Cantidad) > 100
+    ->      ) v;
++--------+
+| Estado |
++--------+
+| JAL    |
++--------+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+mysql> CREATE TABLE OCURRENCIAS(
+    ->     Proceso VARCHAR(50),
+    ->     Mensaje VARCHAR(255),
+    ->     Ocurrencia INT 
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+mysql> 
+mysql> INSERT INTO OCURRENCIAS(Proceso, Mensaje, Ocurrencia)
+    -> VALUES
+    ->   ('Web', 'Error: No se puede dividir por 0', 3),
+    ->   ('RestAPI', 'Error: Fallo la conversión', 5),
+    ->   ('App', 'Error: Fallo la conversión', 7),
+    ->   ('RestAPI', 'Error: Error sin identificar', 9),
+    ->   ('Web', 'Error: Error sin identificar', 1),
+    ->   ('App', 'Error: Error sin identificar', 10),
+    ->   ('Web', 'Estado Completado', 8),
+    ->   ('RestAPI', 'Estado Completado', 6); 
+Query OK, 8 rows affected (0.03 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+mysql> 
+mysql> SELECT Proceso, Mensaje, Ocurrencia
+    ->      FROM OCURRENCIAS r1
+    ->      WHERE Ocurrencia = (
+    ->          SELECT MAX(Ocurrencia)
+    ->          FROM OCURRENCIAS r2
+    ->          WHERE r1.Mensaje = r2.Mensaje
+    ->      )
+    ->      ORDER BY Mensaje;
++---------+----------------------------------+------------+
+| Proceso | Mensaje                          | Ocurrencia |
++---------+----------------------------------+------------+
+| App     | Error: Error sin identificar     |          3 |
+| App     | Error: Fallo la conversión       |          7 |
+| Web     | Error: No se puede dividir por 0 |         10 |
+| Web     | Estado Completado                |          8 |
++---------+----------------------------------+------------+
+4 rows in set (0.00 sec)
