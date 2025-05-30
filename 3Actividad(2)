@@ -1,0 +1,53 @@
+mysql> CREATE TABLE Ordenes (
+    ->  Id INTEGER PRIMARY KEY,
+    ->  Producto VARCHAR(50),
+    ->  Dias_para_entregar INTEGER
+    -> );
+Query OK, 0 rows affected (0.21 sec)
+
+mysql> CREATE TABLE Tiempos_Manufactura (
+    -> Producto VARCHAR(50),
+    -> Componente VARCHAR(50),
+    -> Dias_de_Manufactura INTEGER
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+mysql> INSERT INTO Ordenes (Id, Producto, Dias_para_entregar) 
+    -> VALUES 
+    -> (1, 'Amanecer', 7),
+    -> (2, 'Atardecer', 3),
+    -> (3, 'Anochecer', 9);
+Query OK, 3 rows affected (0.03 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+mysql> INSERT INTO Tiempos_Manufactura (Producto, Componente, Dias_de_Manufactura) 
+    -> VALUES 
+    -> ('Amanecer', 'Photon Coil', 7),
+    -> ('Amanecer', 'Filamento', 2),
+    -> ('Amanecer', 'Capacitor', 3),
+    -> ('Amanecer', 'Esfera', 1),
+    -> ('Atardecer', 'Photon Coil', 7),
+    -> ('Atardecer', 'Filamento', 2),
+    -> ('Anochecer', 'Capacitor', 3),
+    -> ('Anochecer', 'Photon Coil', 1);
+Query OK, 8 rows affected (0.04 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+mysql> SELECT 
+    ->   o.Id, 
+    ->    o.Producto, 
+    ->     MAX(tm.Dias_de_Manufactura) AS Dias_para_armar, 
+    ->     o.Dias_para_entregar,
+    ->     CASE 
+    ->         WHEN MAX(tm.Dias_de_Manufactura) = o.Dias_para_entregar THEN 'En tiempo'
+    ->         WHEN MAX(tm.Dias_de_Manufactura) < o.Dias_para_entregar THEN 'Atrasado'
+    ->         ELSE 'Adelantado '
+    ->     END AS Calendario
+    -> FROM Ordenes o
+    -> JOIN Tiempos_Manufactura tm ON o.Producto = tm.Producto
+    -> GROUP BY o.Id, o.Producto, o.Dias_para_entregar;
++----+-----------+-----------------+--------------------+-------------+
+| Id | Producto  | Dias_para_armar | Dias_para_entregar | Calendario  |
++----+-----------+-----------------+--------------------+-------------+
+|  1 | Amanecer  |               7 |                  7 | En tiempo   |
+|  2 | Atardecer |               7 |                  3 | Adelantado  |
+|  3 | Anochecer |               3 |                  9 | Atrasado    |
++----+-----------+-----------------+--------------------+-------------+
+3 rows in set (0.01 sec)
